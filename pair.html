@@ -1,0 +1,1367 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>DEMON KING GEN — WhatsApp Session Generator</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --black:    #000000;
+      --abyss:    #080808;
+      --dark:     #0f0f0f;
+      --card:     #141414;
+      --border:   #1e1e1e;
+      --red:      #cc0000;
+      --red-hot:  #ff2020;
+      --red-glow: #ff0000;
+      --crimson:  #8b0000;
+      --white:    #ffffff;
+      --grey:     #a0a0a0;
+      --light:    #e8e8e8;
+    }
+
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--black);
+      color: var(--white);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ═══════════ PARTICULES ═══════════ */
+    #particles {
+      position: fixed;
+      top:0; left:0;
+      width:100%; height:100%;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+    .particle {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background: var(--red-glow);
+      border-radius: 50%;
+      animation: float-up linear infinite;
+      opacity: 0;
+    }
+    @keyframes float-up {
+      0%   { transform: translateY(100vh) scale(0); opacity:0; }
+      10%  { opacity: 1; }
+      90%  { opacity: 0.6; }
+      100% { transform: translateY(-10vh) scale(1.5); opacity:0; }
+    }
+
+    /* ═══════════ NAVIGATION ═══════════ */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(204,0,0,0.3);
+      padding: 0 2rem;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .nav-logo {
+      font-family: 'Cinzel', serif;
+      font-weight: 900;
+      font-size: 1.1rem;
+      color: var(--red-hot);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      text-shadow: 0 0 20px rgba(255,32,32,0.6);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .nav-logo .crown-icon {
+      font-size: 1.4rem;
+      filter: drop-shadow(0 0 8px #ff2020);
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      list-style: none;
+    }
+    .nav-links a {
+      color: var(--grey);
+      text-decoration: none;
+      font-size: 0.78rem;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 0.5rem 1rem;
+      border-bottom: 2px solid transparent;
+      transition: all 0.25s ease;
+      display: block;
+    }
+    .nav-links a:hover, .nav-links a.active {
+      color: var(--white);
+      border-bottom-color: var(--red);
+    }
+    .nav-socials {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .nav-socials a {
+      width: 34px; height: 34px;
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--grey);
+      text-decoration: none;
+      font-size: 14px;
+      border: 1px solid var(--border);
+      background: var(--dark);
+      transition: all 0.2s ease;
+    }
+    .nav-socials a:hover { color: var(--white); border-color: var(--red); background: rgba(204,0,0,0.15); }
+    .nav-socials a.yt:hover  { color: #ff0000; }
+    .nav-socials a.tg:hover  { color: #0088cc; }
+    .nav-socials a.wa:hover  { color: #25d366; }
+    .nav-socials a.gh:hover  { color: #f0f6fc; }
+
+    /* ═══════════ PAGES (SPA) ═══════════ */
+    .page { display:none; min-height:100vh; padding-top: 64px; position: relative; z-index: 1; }
+    .page.active { display:block; }
+
+    /* ═══════════ PAGE : HERO / HOME ═══════════ */
+    #page-home {
+      display: none;
+      flex-direction: column;
+    }
+    #page-home.active { display:flex; }
+
+    .hero {
+      position: relative;
+      min-height: calc(100vh - 64px);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      gap: 4rem;
+      padding: 4rem 6vw;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 60% 80% at 70% 50%, rgba(139,0,0,0.15) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-text { position: relative; z-index: 2; }
+    .hero-eyebrow {
+      font-family: 'Orbitron', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.3em;
+      color: var(--red);
+      text-transform: uppercase;
+      margin-bottom: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .hero-eyebrow::before {
+      content: '';
+      width: 32px; height: 1px;
+      background: var(--red);
+    }
+    .hero-title {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(2.5rem, 5vw, 4.5rem);
+      font-weight: 900;
+      line-height: 1.05;
+      color: var(--white);
+      margin-bottom: 0.5rem;
+    }
+    .hero-title .demon { color: var(--red-hot); text-shadow: 0 0 40px rgba(255,32,32,0.5); }
+    .hero-title .king  { color: var(--white); }
+    .hero-sub {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(1.4rem, 2.5vw, 2.2rem);
+      font-weight: 400;
+      color: var(--grey);
+      letter-spacing: 0.1em;
+      margin-bottom: 1.5rem;
+    }
+    .hero-desc {
+      font-size: 0.95rem;
+      color: rgba(160,160,160,0.8);
+      line-height: 1.8;
+      max-width: 480px;
+      margin-bottom: 2.5rem;
+    }
+    .hero-cta {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .btn-primary {
+      padding: 0.85rem 2rem;
+      background: var(--red);
+      color: var(--white);
+      border: none;
+      border-radius: 6px;
+      font-family: 'Cinzel', serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.25s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .btn-primary::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 60%);
+      opacity: 0;
+      transition: opacity 0.25s;
+    }
+    .btn-primary:hover { background: var(--red-hot); box-shadow: 0 0 30px rgba(255,32,32,0.5); transform: translateY(-2px); }
+    .btn-primary:hover::before { opacity: 1; }
+    .btn-outline {
+      padding: 0.85rem 2rem;
+      background: transparent;
+      color: var(--white);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 6px;
+      font-family: 'Cinzel', serif;
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.25s ease;
+    }
+    .btn-outline:hover { border-color: var(--red); color: var(--red-hot); transform: translateY(-2px); }
+
+    /* Hero image column */
+    .hero-visual { position: relative; z-index: 2; display: flex; justify-content: center; align-items: center; }
+    .anos-frame {
+      position: relative;
+      width: 100%;
+      max-width: 420px;
+    }
+    .anos-frame::before {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      background: linear-gradient(135deg, var(--red), transparent 40%, var(--red) 80%);
+      border-radius: 16px;
+      z-index: -1;
+      animation: border-spin 4s linear infinite;
+    }
+    @keyframes border-spin {
+      0%   { filter: hue-rotate(0deg); opacity: 0.7; }
+      50%  { opacity: 1; }
+      100% { filter: hue-rotate(360deg); opacity: 0.7; }
+    }
+    .anos-img {
+      width: 100%;
+      border-radius: 14px;
+      display: block;
+      object-fit: cover;
+      max-height: 520px;
+      filter: saturate(1.1) contrast(1.05);
+    }
+    .anos-badge {
+      position: absolute;
+      bottom: -16px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0,0,0,0.9);
+      border: 1px solid rgba(204,0,0,0.5);
+      border-radius: 50px;
+      padding: 8px 20px;
+      font-family: 'Cinzel', serif;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      color: var(--red-hot);
+      white-space: nowrap;
+      text-transform: uppercase;
+    }
+
+    /* Stat bar */
+    .hero-stats {
+      display: flex;
+      gap: 3rem;
+      margin-top: 3rem;
+      padding-top: 3rem;
+      border-top: 1px solid var(--border);
+    }
+    .stat-item { text-align: center; }
+    .stat-num { font-family: 'Orbitron', monospace; font-size: 1.8rem; font-weight: 900; color: var(--red-hot); }
+    .stat-label { font-size: 0.7rem; color: var(--grey); letter-spacing: 0.15em; text-transform: uppercase; margin-top: 4px; }
+
+    /* ═══════════ SECTION GÉNÉRIQUE ═══════════ */
+    .section { padding: 5rem 6vw; }
+    .section-eyebrow {
+      font-family: 'Orbitron', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.35em;
+      color: var(--red);
+      text-transform: uppercase;
+      margin-bottom: 0.8rem;
+    }
+    .section-title {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(1.8rem, 3vw, 3rem);
+      font-weight: 800;
+      color: var(--white);
+      margin-bottom: 1rem;
+    }
+    .section-desc { color: var(--grey); font-size: 0.95rem; line-height: 1.8; max-width: 600px; }
+    .red-line {
+      width: 48px; height: 3px;
+      background: var(--red);
+      margin: 1.2rem 0 2rem;
+      border-radius: 2px;
+    }
+
+    /* ═══════════ PAGE : GENERATOR ═══════════ */
+    #page-generator {
+      display: none;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 80px 1rem 3rem;
+      min-height: 100vh;
+    }
+    #page-generator.active { display: flex; }
+
+    .gen-wrapper {
+      width: 100%;
+      max-width: 520px;
+    }
+    .gen-header { text-align: center; margin-bottom: 2.5rem; }
+    .gen-crown {
+      width: 80px; height: 80px;
+      background: radial-gradient(circle, rgba(204,0,0,0.2) 0%, rgba(0,0,0,0) 70%);
+      border: 2px solid rgba(204,0,0,0.4);
+      border-radius: 50%;
+      margin: 0 auto 1.2rem;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2rem;
+      animation: pulse-glow 2.5s ease-in-out infinite;
+    }
+    @keyframes pulse-glow {
+      0%, 100% { box-shadow: 0 0 20px rgba(204,0,0,0.3); }
+      50%       { box-shadow: 0 0 40px rgba(255,32,32,0.7); }
+    }
+    .gen-title { font-family:'Cinzel',serif; font-size:1.9rem; font-weight:900; color:var(--white); }
+    .gen-title span { color:var(--red-hot); }
+    .gen-subtitle { color:var(--grey); font-size:0.85rem; margin-top:0.5rem; letter-spacing:0.05em; }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+      margin-bottom: 1rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--red), transparent);
+    }
+
+    /* Toggle */
+    .toggle-wrap {
+      display: flex;
+      background: var(--dark);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 4px;
+      margin-bottom: 1.5rem;
+      gap: 4px;
+    }
+    .toggle-opt {
+      flex: 1;
+      padding: 10px;
+      text-align: center;
+      cursor: pointer;
+      border-radius: 7px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      transition: all 0.25s ease;
+      color: var(--grey);
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+    }
+    .toggle-opt.active {
+      background: var(--red);
+      color: var(--white);
+      box-shadow: 0 0 16px rgba(204,0,0,0.5);
+    }
+    .toggle-opt:hover:not(.active) { color: var(--white); background: var(--border); }
+
+    .inp-label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--grey);
+      margin-bottom: 8px;
+    }
+    .inp-field {
+      width: 100%;
+      padding: 13px 16px;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      background: var(--dark);
+      color: var(--white);
+      font-size: 1rem;
+      font-family: 'Inter', sans-serif;
+      transition: border-color 0.2s;
+      margin-bottom: 1.2rem;
+    }
+    .inp-field:focus { outline:none; border-color: var(--red); box-shadow: 0 0 0 3px rgba(204,0,0,0.15); }
+    .inp-field::placeholder { color: rgba(160,160,160,0.4); }
+
+    .gen-btn {
+      width: 100%;
+      padding: 14px;
+      background: var(--red);
+      border: none;
+      border-radius: 10px;
+      color: var(--white);
+      font-family: 'Cinzel', serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      position: relative; overflow: hidden;
+    }
+    .gen-btn:hover { background: var(--red-hot); box-shadow: 0 0 30px rgba(255,32,32,0.5); transform: translateY(-2px); }
+    .gen-btn.hidden { display: none; }
+
+    .code-box {
+      background: var(--dark);
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      text-align: center;
+      min-height: 52px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 1rem;
+      font-size: 1.1rem;
+      font-weight: 700;
+      font-family: 'Orbitron', monospace;
+      color: var(--red-hot);
+      letter-spacing: 0.15em;
+      word-break: break-all;
+    }
+    .code-msg { font-family: 'Inter', sans-serif; font-size: 0.85rem; font-weight: 400; color: var(--grey); letter-spacing: 0; }
+
+    .qr-box {
+      background: var(--dark);
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      padding: 28px;
+      text-align: center;
+      margin-bottom: 1rem;
+      display: none;
+    }
+    .qr-img { max-width: 260px; max-height: 260px; margin: 0 auto 16px; border-radius: 8px; display: block; border: 4px solid rgba(204,0,0,0.3); }
+    .qr-hint { font-size: 0.8rem; color: var(--grey); line-height: 1.6; }
+
+    .copy-btn {
+      width: 100%;
+      padding: 12px;
+      background: transparent;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      color: var(--light);
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      transition: all 0.25s;
+    }
+    .copy-btn:hover { border-color: var(--red); color: var(--red-hot); }
+
+    .loading { display:none; text-align:center; padding: 1rem 0; }
+    .loading i { font-size: 1.8rem; color: var(--red); animation: spin 1s linear infinite; }
+    @keyframes spin { 100% { transform: rotate(360deg); } }
+
+    .success-msg { color: #22c55e; display:flex; align-items:center; justify-content:center; gap:8px; font-size:0.9rem; }
+    .error-msg   { color: var(--red-hot); display:flex; align-items:center; justify-content:center; gap:8px; font-size:0.85rem; }
+
+    .gen-footer { text-align:center; margin-top:1.5rem; font-size:0.72rem; color:rgba(160,160,160,0.4); letter-spacing:0.1em; text-transform:uppercase; }
+
+    /* ═══════════ PAGE : GALERIE / PHOTOS ═══════════ */
+    #page-gallery { display:none; }
+    #page-gallery.active { display:block; }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2.5rem;
+    }
+    .gallery-item {
+      position: relative;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      aspect-ratio: 3/4;
+      cursor: pointer;
+      group: true;
+    }
+    .gallery-item img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.5s ease;
+      filter: saturate(1.05);
+    }
+    .gallery-item:hover img { transform: scale(1.06); }
+    .gallery-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 55%);
+      opacity: 0;
+      transition: opacity 0.3s;
+      display: flex;
+      align-items: flex-end;
+      padding: 1.2rem;
+    }
+    .gallery-item:hover .gallery-overlay { opacity: 1; }
+    .gallery-caption { font-family:'Cinzel',serif; font-size:0.8rem; color:var(--white); letter-spacing:0.1em; text-transform:uppercase; }
+
+    /* ═══════════ PAGE : VIDÉO ═══════════ */
+    #page-video { display:none; }
+    #page-video.active { display:block; }
+
+    .video-hero {
+      margin-top: 2rem;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid rgba(204,0,0,0.3);
+      position: relative;
+      max-width: 900px;
+    }
+    .video-hero video { width:100%; display:block; max-height: 550px; background:#000; }
+    .video-glow {
+      position:absolute; inset:0; pointer-events:none;
+      box-shadow: inset 0 0 60px rgba(204,0,0,0.15);
+      border-radius: 16px;
+    }
+    .video-info { margin-top: 1.5rem; }
+    .video-tag {
+      display: inline-block;
+      background: rgba(204,0,0,0.15);
+      border: 1px solid rgba(204,0,0,0.4);
+      color: var(--red-hot);
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 100px;
+      margin-bottom: 0.8rem;
+    }
+    .video-title { font-family:'Cinzel',serif; font-size:1.6rem; font-weight:800; color:var(--white); margin-bottom: 0.6rem; }
+    .video-desc { color:var(--grey); font-size:0.9rem; line-height:1.7; }
+
+    /* ═══════════ PAGE : TUTO ═══════════ */
+    #page-tuto { display:none; }
+    #page-tuto.active { display:block; }
+
+    .steps { display:flex; flex-direction:column; gap:2rem; margin-top:2.5rem; }
+    .step {
+      display: grid;
+      grid-template-columns: 56px 1fr;
+      gap: 1.5rem;
+      align-items: start;
+    }
+    .step-num {
+      width: 56px; height: 56px;
+      background: rgba(204,0,0,0.12);
+      border: 2px solid rgba(204,0,0,0.4);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Orbitron', monospace;
+      font-size: 1rem;
+      font-weight: 900;
+      color: var(--red-hot);
+      flex-shrink: 0;
+      margin-top: 4px;
+    }
+    .step-title { font-family:'Cinzel',serif; font-size:1.1rem; font-weight:700; color:var(--white); margin-bottom:0.5rem; }
+    .step-desc { color:var(--grey); font-size:0.88rem; line-height:1.75; }
+    .step-img { margin-top:1rem; border-radius:10px; overflow:hidden; border:1px solid var(--border); }
+    .step-img img { width:100%; display:block; max-height:260px; object-fit:cover; filter:saturate(1.1); }
+    .step-code {
+      margin-top: 0.8rem;
+      background: var(--dark);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--red);
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-family: 'Orbitron', monospace;
+      font-size: 0.78rem;
+      color: var(--red-hot);
+      letter-spacing: 0.05em;
+      overflow-x: auto;
+    }
+    .divider { width:100%; height:1px; background:var(--border); margin:1rem 0; }
+
+    /* ═══════════ PAGE : COMMUNAUTÉ / SUPPORT ═══════════ */
+    #page-support { display:none; }
+    #page-support.active { display:block; }
+
+    .support-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.2rem;
+      margin-top: 2.5rem;
+    }
+    .support-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.8rem;
+      text-decoration: none;
+      display: flex;
+      align-items: flex-start;
+      gap: 1.2rem;
+      transition: all 0.25s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .support-card::before {
+      content:''; position:absolute; top:0; left:0; right:0; height:2px;
+      opacity:0; transition:opacity 0.25s;
+    }
+    .support-card:hover { transform: translateY(-4px); border-color: rgba(204,0,0,0.3); }
+    .support-card:hover::before { opacity:1; }
+    .support-card.tg::before { background:linear-gradient(90deg,transparent,#0088cc,transparent); }
+    .support-card.wa::before { background:linear-gradient(90deg,transparent,#25d366,transparent); }
+    .support-card.yt::before { background:linear-gradient(90deg,transparent,#ff0000,transparent); }
+    .support-card.gh::before { background:linear-gradient(90deg,transparent,#6e40c9,transparent); }
+    .support-icon {
+      width: 52px; height: 52px; border-radius: 14px;
+      display: flex; align-items:center; justify-content:center;
+      font-size: 1.4rem; flex-shrink:0;
+    }
+    .support-card.tg .support-icon { background:rgba(0,136,204,0.15); color:#0088cc; }
+    .support-card.wa .support-icon { background:rgba(37,211,102,0.15); color:#25d366; }
+    .support-card.yt .support-icon { background:rgba(255,0,0,0.15); color:#ff0000; }
+    .support-card.gh .support-icon { background:rgba(110,64,201,0.15); color:#a37af7; }
+    .support-info h3 { font-family:'Cinzel',serif; font-size:1rem; font-weight:700; color:var(--white); margin-bottom:0.35rem; }
+    .support-info p  { font-size:0.8rem; color:var(--grey); line-height:1.6; }
+    .support-arrow { margin-left:auto; color:var(--grey); font-size:0.8rem; margin-top:4px; transition: transform 0.2s; }
+    .support-card:hover .support-arrow { transform:translateX(4px); color:var(--white); }
+
+    /* ═══════════ AUDIO PLAYER ═══════════ */
+    .audio-player {
+      position: fixed;
+      bottom: 24px; right: 24px;
+      z-index: 200;
+      background: rgba(8,8,8,0.92);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(204,0,0,0.35);
+      border-radius: 16px;
+      padding: 14px 18px;
+      min-width: 260px;
+      max-width: 310px;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.6), 0 0 20px rgba(204,0,0,0.1);
+    }
+    .player-label {
+      font-family:'Orbitron',monospace;
+      font-size: 0.55rem;
+      letter-spacing: 0.25em;
+      color: var(--red);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .player-title {
+      font-family:'Cinzel',serif;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 10px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .player-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .play-btn {
+      width: 38px; height: 38px;
+      border-radius: 50%;
+      background: var(--red);
+      border: none;
+      color: var(--white);
+      font-size: 0.9rem;
+      cursor: pointer;
+      display: flex; align-items:center; justify-content:center;
+      transition: all 0.2s;
+      flex-shrink: 0;
+    }
+    .play-btn:hover { background: var(--red-hot); box-shadow: 0 0 16px rgba(255,32,32,0.5); }
+    .player-progress { flex:1; }
+    .progress-bar {
+      width: 100%; height: 3px;
+      background: var(--border);
+      border-radius: 2px;
+      cursor: pointer;
+      position: relative;
+    }
+    .progress-fill {
+      height: 100%; background: var(--red);
+      border-radius: 2px; width:0%;
+      transition: width 0.2s;
+    }
+    .player-time { font-size:0.65rem; color:var(--grey); margin-top:4px; display:flex; justify-content:space-between; }
+    .vol-btn {
+      background:none; border:none; color:var(--grey); cursor:pointer; font-size:0.85rem;
+      transition:color 0.2s;
+    }
+    .vol-btn:hover { color:var(--white); }
+
+    /* ═══════════ SCROLL REVEAL ═══════════ */
+    .reveal { opacity:0; transform:translateY(24px); transition:opacity 0.6s ease, transform 0.6s ease; }
+    .reveal.visible { opacity:1; transform:translateY(0); }
+
+    /* ═══════════ RESPONSIVE ═══════════ */
+    @media (max-width: 900px) {
+      .hero { grid-template-columns:1fr; text-align:center; padding:3rem 1.5rem; gap:2.5rem; }
+      .hero-eyebrow { justify-content:center; }
+      .hero-cta { justify-content:center; }
+      .hero-desc { margin:0 auto 2rem; }
+      .hero-visual { order:-1; }
+      .anos-frame { max-width:300px; }
+      .hero-stats { justify-content:center; }
+      .nav-links { display:none; }
+    }
+    @media (max-width: 600px) {
+      .section { padding:3rem 1.2rem; }
+      .gallery-grid { grid-template-columns:1fr; }
+      .audio-player { bottom:12px; right:12px; min-width:240px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- PARTICLES -->
+<div id="particles"></div>
+
+<!-- AUDIO -->
+<audio id="bgAudio" loop preload="auto">
+  <source src="https://files.catbox.moe/pzyjo6.mp3" type="audio/mpeg">
+</audio>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo" onclick="showPage('home',this)">
+    <span class="crown-icon">$</span> DEMON KING GEN
+  </a>
+  <ul class="nav-links">
+    <li><a href="#" class="active" onclick="showPage('home',this)">Accueil</a></li>
+    <li><a href="#" onclick="showPage('generator',this)">Générateur</a></li>
+    <li><a href="#" onclick="showPage('gallery',this)">Galerie</a></li>
+    <li><a href="#" onclick="showPage('video',this)">Vidéo</a></li>
+    <li><a href="#" onclick="showPage('tuto',this)">Tutoriel</a></li>
+    <li><a href="#" onclick="showPage('support',this)">Communauté</a></li>
+  </ul>
+  <div class="nav-socials">
+    <a href="https://www.youtube.com/@theslimetech?sub_confirmation=1" target="_blank" class="yt" title="YouTube"><i class="fab fa-youtube"></i></a>
+    <a href="https://t.me/TheBlackKingLuciferoChannel" target="_blank" class="tg" title="Telegram"><i class="fab fa-telegram-plane"></i></a>
+    <a href="https://wa.me/22606527293?text=𝐻𝐼+𝐿𝑂𝑅𝐷+𝐼+𝐻𝐴𝑉𝐸+𝑄𝑈𝐸𝑆𝑇𝐼𝑂𝑁𝑆+𝑂𝑁+𝑂𝑁𝐸+𝑃𝑅𝑂𝐽𝐸𝐶𝑇+𝑂𝐹+𝑇𝐻𝐸+𝑆𝐿𝐼𝑀𝐸+𝑇𝐸𝐶𝐻+𝐸𝑀𝑃𝐼𝑅𝐸" target="_blank" class="wa" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+    <a href="https://github.com/kinglucifero456-glitch/DEMON-KING_MD" target="_blank" class="gh" title="GitHub"><i class="fab fa-github"></i></a>
+  </div>
+</nav>
+
+<!-- ══════════════════════ PAGE HOME ══════════════════════ -->
+<div id="page-home" class="page active">
+  <section class="hero">
+    <div class="hero-text reveal">
+      <div class="hero-eyebrow">WhatsApp Bot Session Generator</div>
+      <h1 class="hero-title">
+        <span class="demon">DEMON</span><br>
+        <span class="king">KING</span> GEN
+      </h1>
+      <p class="hero-sub">BY THE STE</p>
+      <p class="hero-desc">
+        Génère ton ID de session WhatsApp en quelques secondes. 
+        Pair Code ou QR Code — la puissance du Démon Roi à ton service.
+        Aucune limite. Aucune restriction. Tu règnes.
+      </p>
+      <div class="hero-cta">
+        <a href="#" class="btn-primary" onclick="showPage('generator')">
+          <i class="fas fa-bolt"></i> Lancer le Générateur
+        </a>
+        <a href="#" class="btn-outline" onclick="showPage('tuto')">
+          <i class="fas fa-scroll"></i> Voir le Tuto
+        </a>
+      </div>
+    </div>
+    <div class="hero-visual reveal">
+      <div class="anos-frame">
+        <img src="https://files.catbox.moe/ti1389.jpg" alt="Anos Voldigoad" class="anos-img" onerror="this.style.display='none'">
+        <div class="anos-badge">🜲 Anos Voldigoad — 魔王</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="hero-stats reveal">
+      <div class="stat-item">
+        <div class="stat-num">2</div>
+        <div class="stat-label">Méthodes</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">∞</div>
+        <div class="stat-label">Sessions</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">0</div>
+        <div class="stat-label">Limite</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">24/7</div>
+        <div class="stat-label">Disponible</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-eyebrow reveal">Fonctionnalités</div>
+    <h2 class="section-title reveal">Pourquoi DEMON KING GEN ?</h2>
+    <div class="red-line reveal"></div>
+    <div class="support-grid reveal">
+      <div class="support-card" style="text-decoration:none;cursor:default;">
+        <div class="support-icon" style="background:rgba(204,0,0,0.15);color:var(--red-hot);">
+          <i class="fas fa-bolt"></i>
+        </div>
+        <div class="support-info">
+          <h3>Ultra Rapide</h3>
+          <p>Génération instantanée de code en moins de 3 secondes.</p>
+        </div>
+      </div>
+      <div class="support-card" style="text-decoration:none;cursor:default;">
+        <div class="support-icon" style="background:rgba(204,0,0,0.15);color:var(--red-hot);">
+          <i class="fas fa-shield-alt"></i>
+        </div>
+        <div class="support-info">
+          <h3>Sécurisé</h3>
+          <p>Tes données ne sont jamais stockées. Connexion directe avec les serveurs WhatsApp.</p>
+        </div>
+      </div>
+      <div class="support-card" style="text-decoration:none;cursor:default;">
+        <div class="support-icon" style="background:rgba(204,0,0,0.15);color:var(--red-hot);">
+          <i class="fas fa-qrcode"></i>
+        </div>
+        <div class="support-info">
+          <h3>Pair Code & QR</h3>
+          <p>Deux méthodes au choix : code de jumelage 8 caractères ou QR Code à scanner.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ══════════════════════ PAGE GENERATOR ══════════════════════ -->
+<div id="page-generator" class="page" style="display:none;">
+  <div class="gen-wrapper">
+    <div class="gen-header reveal">
+      <div class="gen-crown">🜲</div>
+      <h1 class="gen-title"><span>DEMON KING</span> GEN</h1>
+      <p class="gen-subtitle">Génère ton ID de session WhatsApp</p>
+    </div>
+
+    <div class="card reveal">
+      <!-- Toggle -->
+      <div class="toggle-wrap">
+        <div class="toggle-opt active" data-mode="pair">
+          <i class="fas fa-key"></i> Pair Code
+        </div>
+        <div class="toggle-opt" data-mode="qr">
+          <i class="fas fa-qrcode"></i> QR Code
+        </div>
+      </div>
+
+      <!-- Input -->
+      <div id="inputGroup">
+        <label class="inp-label">Numéro WhatsApp avec indicatif pays</label>
+        <input type="text" id="mobileNumber" class="inp-field" placeholder="+2250123456789" pattern="[+][0-9]{10,}" title="Commencer par + suivi du numéro complet">
+      </div>
+
+      <!-- Generate btn -->
+      <button class="gen-btn" id="submit">
+        <i class="fas fa-bolt"></i> GÉNÉRER LE CODE
+      </button>
+
+      <!-- Loading -->
+      <div class="loading" id="loading">
+        <i class="fas fa-spinner"></i>
+      </div>
+
+      <!-- Code display -->
+      <div class="code-box" id="codeDisplay">
+        <span class="code-msg">Ton code apparaîtra ici</span>
+      </div>
+
+      <!-- QR display -->
+      <div class="qr-box" id="qrDisplay">
+        <img id="qrImage" class="qr-img" src="" alt="QR Code">
+        <div class="qr-hint" id="qrInstructions">Scanner ce QR Code avec WhatsApp</div>
+      </div>
+
+      <!-- Copy btn -->
+      <button class="copy-btn" id="copy" onclick="copyCode()">
+        <i class="fas fa-copy"></i> Copier le Code
+      </button>
+    </div>
+
+    <p class="gen-footer">© 2026 DEMON KING GEN — Open Source Project</p>
+  </div>
+</div>
+
+<!-- ══════════════════════ PAGE GALLERY ══════════════════════ -->
+<div id="page-gallery" class="page" style="display:none;">
+  <div class="section">
+    <div class="section-eyebrow reveal">Galerie</div>
+    <h2 class="section-title reveal">Anos Voldigoad</h2>
+    <div class="red-line reveal"></div>
+    <p class="section-desc reveal">Le Démon Roi Suprême — maître de la destruction et de la renaissance. Celui qui brise toute limite magique par la seule force de sa volonté.</p>
+
+    <div class="gallery-grid">
+      <div class="gallery-item reveal">
+        <img src="https://files.catbox.moe/ti1389.jpg" alt="Anos Voldigoad 1" loading="lazy">
+        <div class="gallery-overlay">
+          <div class="gallery-caption">ANOS — THE DEMON KING</div>
+        </div>
+      </div>
+      <div class="gallery-item reveal">
+        <img src="https://files.catbox.moe/su1tq6.jpg" alt="Anos Voldigoad 2" loading="lazy">
+        <div class="gallery-overlay">
+          <div class="gallery-caption">ANOS - THE TYRANIE </div>
+        </div>
+      </div>
+      <div class="gallery-item reveal">
+        <img src="https://files.catbox.moe/a1ucxb.jpg" alt="Anos Voldigoad 3" loading="lazy">
+        <div class="gallery-overlay">
+          <div class="gallery-caption">ANOS — THE BEST LORD         </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════ PAGE VIDEO ══════════════════════ -->
+<div id="page-video" class="page" style="display:none;">
+  <div class="section">
+    <div class="section-eyebrow reveal">Vidéo</div>
+    <h2 class="section-title reveal">IN ACTION</h2>
+    <div class="red-line reveal"></div>
+
+    <div class="video-hero reveal">
+      <video id="mainVideo" controls preload="metadata" poster="https://files.catbox.moe/ti1389.jpg">
+        <source src="https://files.catbox.moe/y5xx1x.mp4" type="video/mp4">
+        Ton navigateur ne supporte pas la vidéo HTML5.
+      </video>
+      <div class="video-glow"></div>
+    </div>
+
+    <div class="video-info reveal" style="margin-top:2rem;">
+      <div class="video-tag">DEMON KING GEN</div>
+      <h3 class="video-title">Anos Voldigoad — La Puissance Absolue</h3>
+      <p class="video-desc">Celui qui régit le destin des démons et des humains. Sa magie brise toutes les lois de la réalité — et DEMON KING GEN porte cet esprit dans chaque session WhatsApp générée.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════ PAGE TUTO ══════════════════════ -->
+<div id="page-tuto" class="page" style="display:none;">
+  <div class="section">
+    <div class="section-eyebrow reveal">Guide</div>
+    <h2 class="section-title reveal">Comment générer ta session</h2>
+    <div class="red-line reveal"></div>
+    <p class="section-desc reveal">Suis ces étapes simples pour connecter ton bot WhatsApp à DEMON KING GEN.</p>
+
+    <div class="steps" style="margin-top:3rem;">
+
+      <div class="step reveal">
+        <div class="step-num">01</div>
+        <div>
+          <div class="step-title">Ouvre le Générateur</div>
+          <p class="step-desc">Clique sur "Générateur" dans la navigation ou le bouton principal de la page d'accueil. Choisir entre <strong style="color:var(--white)">Pair Code</strong> ou <strong style="color:var(--white)">QR Code</strong> selon ta préférence.</p>
+          <div class="step-img">
+            <img src="https://files.catbox.moe/q1jimq.jpg" alt="Étape 1" loading="lazy">
+          </div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="step reveal">
+        <div class="step-num">02</div>
+        <div>
+          <div class="step-title">Entre ton numéro WhatsApp</div>
+          <p class="step-desc">Saisis ton numéro complet avec l'indicatif pays (ex: +225 pour Côte d'Ivoire). Ne mets pas d'espaces ni de tirets.</p>
+          <div class="step-code">+2260123456789</div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="step reveal">
+        <div class="step-num">03</div>
+        <div>
+          <div class="step-title">Clique sur Générer</div>
+          <p class="step-desc">Appuie sur le bouton <strong style="color:var(--red-hot)">GÉNÉRER LE CODE</strong>. Attends quelques secondes — ton code apparaît dans la zone rouge.</p>
+          <div class="step-img">
+            <img src="https://files.catbox.moe/lchmab.jpg" alt="Étape 3" loading="lazy">
+          </div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="step reveal">
+        <div class="step-num">04</div>
+        <div>
+          <div class="step-title">Copie et colle dans WhatsApp</div>
+          <p class="step-desc">Pour le Pair Code : ouvre WhatsApp → Appareils liés → Lier un appareil → Saisir le code à 8 chiffres. Pour le QR : scanne directement avec la caméra WhatsApp.</p>
+          <div class="step-img">
+            <img src="https://files.catbox.moe/1odk5l.jpg" alt="Étape 4" loading="lazy">
+          </div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="step reveal">
+        <div class="step-num">05</div>
+        <div>
+          <div class="step-title">Ton bot est connecté 🜲</div>
+          <p class="step-desc">C'est tout ! La session est générée. Copie l'ID de session et colle-le dans la configuration de ton bot. Le Démon Roi approuve.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════ PAGE SUPPORT ══════════════════════ -->
+<div id="page-support" class="page" style="display:none;">
+  <div class="section">
+    <div class="section-eyebrow reveal">Communauté</div>
+    <h2 class="section-title reveal">Rejoins le Royaume</h2>
+    <div class="red-line reveal"></div>
+    <p class="section-desc reveal">Groupes d'entraide, chaînes d'actualités, code source et tutoriels vidéo. Le Démon Roi te reçoit dans son royaume.</p>
+
+    <div class="support-grid">
+
+      <a href="https://t.me/TheBlackKingLuciferoChannel" target="_blank" class="support-card tg reveal">
+        <div class="support-icon"><i class="fab fa-telegram-plane"></i></div>
+        <div class="support-info">
+          <h3>Canal Telegram</h3>
+          <p>Rejoins la communauté principale. Support, updates et partage d'astuces bot.</p>
+        </div>
+        <i class="fas fa-arrow-right support-arrow"></i>
+      </a>
+
+      <a href="https://t.me/TheBlackKingLuciferoChannel" target="_blank" class="support-card tg reveal">
+        <div class="support-icon"><i class="fab fa-telegram-plane"></i></div>
+        <div class="support-info">
+          <h3>Canal Telegram</h3>
+          <p>Annonces officielles, nouvelles versions et releases exclusives de la team slime tech empire.</p>
+        </div>
+        <i class="fas fa-arrow-right support-arrow"></i>
+      </a>
+
+      <a href="https://wa.me/22606527293?text=𝐻𝐼+𝐿𝑂𝑅𝐷+𝐼+𝐻𝐴𝑉𝐸+𝑄𝑈𝐸𝑆𝑇𝐼𝑂𝑁𝑆+𝑂𝑁+𝑂𝑁𝐸+𝑃𝑅𝑂𝐽𝐸𝐶𝑇+𝑂𝐹+𝑇𝐻𝐸+𝑆𝐿𝐼𝑀𝐸+𝑇𝐸𝐶𝐻+𝐸𝑀𝑃𝐼𝑅" target="_blank" class="support-card wa reveal">
+        <div class="support-icon"><i class="fab fa-whatsapp"></i></div>
+        <div class="support-info">
+          <h3>Canal WhatsApp</h3>
+          <p>Me contacter pour avoir les supports whatsapp</p>
+        </div>
+        <i class="fas fa-arrow-right support-arrow"></i>
+      </a>
+
+      <a href="https://www.youtube.com/@theslimetech?sub_confirmation=1" target="_blank" class="support-card yt reveal">
+        <div class="support-icon"><i class="fab fa-youtube"></i></div>
+        <div class="support-info">
+          <h3>Chaîne YouTube</h3>
+          <p>Tutoriels vidéo complets. Apprends à déployer ton bot WhatsApp étape par étape.</p>
+        </div>
+        <i class="fas fa-arrow-right support-arrow"></i>
+      </a>
+
+      <a href="https://github.com/kinglucifero456-glitch/DEMON-KING_MD" target="_blank" class="support-card gh reveal">
+        <div class="support-icon"><i class="fab fa-github"></i></div>
+        <div class="support-info">
+          <h3>GitHub — Code Source</h3>
+          <p>Fork, star et contribue. Le code du Démon Roi est open source. Rejoins les développeurs.</p>
+        </div>
+        <i class="fas fa-arrow-right support-arrow"></i>
+      </a>
+
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════ AUDIO PLAYER ══════════════════════ -->
+<div class="audio-player" id="audioPlayer">
+  <div class="player-label">𝄞 Demon King OST</div>
+  <div class="player-title">Anos Voldigoad Theme</div>
+  <div class="player-controls">
+    <button class="play-btn" id="playBtn" onclick="togglePlay()">
+      <i class="fas fa-play" id="playIcon"></i>
+    </button>
+    <div class="player-progress">
+      <div class="progress-bar" id="progressBar" onclick="seekAudio(event)">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+      <div class="player-time">
+        <span id="currentTime">0:00</span>
+        <span id="totalTime">0:00</span>
+      </div>
+    </div>
+    <button class="vol-btn" onclick="toggleMute()" id="volBtn">
+      <i class="fas fa-volume-up"></i>
+    </button>
+  </div>
+</div>
+
+<!-- ══════════════════════ SCRIPTS ══════════════════════ -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.0.0-alpha.1/axios.min.js"></script>
+<script>
+/* ─── PARTICLES ─── */
+(function() {
+  const canvas = document.getElementById('particles');
+  const count = 40;
+  for (let i = 0; i < count; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    const size = Math.random() * 3 + 1;
+    p.style.cssText = `
+      left:${Math.random()*100}%;
+      width:${size}px; height:${size}px;
+      animation-duration:${Math.random()*12+8}s;
+      animation-delay:${Math.random()*10}s;
+      opacity:${Math.random()*0.5+0.2};
+    `;
+    canvas.appendChild(p);
+  }
+})();
+
+/* ─── PAGE NAVIGATION ─── */
+function showPage(name, linkEl) {
+  document.querySelectorAll('.page').forEach(p => {
+    p.classList.remove('active');
+    p.style.display = 'none';
+  });
+  const target = document.getElementById('page-' + name);
+  if (target) { target.classList.add('active'); target.style.display = (name === 'home') ? 'flex' : (name === 'generator') ? 'flex' : 'block'; }
+  document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+  if (linkEl) linkEl.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+  triggerReveal();
+}
+
+/* ─── SCROLL REVEAL ─── */
+function triggerReveal() {
+  setTimeout(() => {
+    document.querySelectorAll('.reveal').forEach((el,i) => {
+      setTimeout(() => el.classList.add('visible'), i * 80);
+    });
+  }, 50);
+}
+window.addEventListener('scroll', () => {
+  document.querySelectorAll('.reveal:not(.visible)').forEach(el => {
+    const rect = el.getBoundingClientRect();
+    if (rect.top < window.innerHeight - 60) el.classList.add('visible');
+  });
+});
+triggerReveal();
+
+/* ─── GENERATOR TOGGLE ─── */
+let currentMode = 'pair';
+document.querySelectorAll('.toggle-opt').forEach(opt => {
+  opt.addEventListener('click', function() {
+    const mode = this.dataset.mode;
+    if (mode === currentMode) return;
+    currentMode = mode;
+    document.querySelectorAll('.toggle-opt').forEach(o => o.classList.remove('active'));
+    this.classList.add('active');
+    const submitBtn = document.getElementById('submit');
+    const inputGroup = document.getElementById('inputGroup');
+    if (mode === 'pair') {
+      submitBtn.innerHTML = '<i class="fas fa-bolt"></i> GÉNÉRER LE CODE';
+      submitBtn.classList.remove('hidden');
+      inputGroup.style.display = 'block';
+    } else {
+      submitBtn.classList.add('hidden');
+      inputGroup.style.display = 'none';
+      generateQRCode();
+    }
+    document.getElementById('codeDisplay').innerHTML = '<span class="code-msg">Ton code apparaîtra ici</span>';
+    document.getElementById('qrDisplay').style.display = 'none';
+    document.getElementById('codeDisplay').style.display = 'flex';
+  });
+});
+
+async function generateQRCode() {
+  const codeDisplay = document.getElementById('codeDisplay');
+  const qrDisplay = document.getElementById('qrDisplay');
+  const loading = document.getElementById('loading');
+  loading.style.display = 'block';
+  codeDisplay.innerHTML = '';
+  qrDisplay.style.display = 'none';
+  try {
+    const response = await axios('/qr');
+    if (response.data.qr) {
+      document.getElementById('qrImage').src = response.data.qr;
+      document.getElementById('qrInstructions').innerHTML = response.data.instructions.join('<br>');
+      qrDisplay.style.display = 'block';
+      codeDisplay.style.display = 'none';
+    } else {
+      codeDisplay.innerHTML = '<div class="error-msg"><i class="fas fa-exclamation-circle"></i> Échec de génération du QR</div>';
+      codeDisplay.style.display = 'flex';
+    }
+  } catch(e) {
+    codeDisplay.innerHTML = '<div class="error-msg"><i class="fas fa-exclamation-circle"></i> Erreur QR. Réessaie.</div>';
+    codeDisplay.style.display = 'flex';
+  } finally {
+    loading.style.display = 'none';
+  }
+}
+
+document.getElementById('submit').addEventListener('click', async e => {
+  e.preventDefault();
+  const mobileInput = document.getElementById('mobileNumber');
+  const codeDisplay = document.getElementById('codeDisplay');
+  const qrDisplay = document.getElementById('qrDisplay');
+  const loading = document.getElementById('loading');
+  const mobile = mobileInput.value.trim();
+  if (!mobile) {
+    codeDisplay.innerHTML = '<div class="error-msg"><i class="fas fa-exclamation-circle"></i> Entre ton numéro WhatsApp</div>';
+    return;
+  }
+  loading.style.display = 'block';
+  codeDisplay.innerHTML = '';
+  qrDisplay.style.display = 'none';
+  try {
+    const response = await axios(`/pair?number=${mobile.replace(/[^0-9]/g,'')}`);
+    const code = response.data.code || 'Service Unavailable';
+    if (code === 'Service Unavailable') {
+      codeDisplay.innerHTML = '<div class="error-msg"><i class="fas fa-exclamation-circle"></i> Service indisponible</div>';
+    } else {
+      codeDisplay.innerHTML = `<div class="success-msg" style="flex-direction:column;gap:4px;"><div style="font-size:0.7rem;color:var(--grey);letter-spacing:0.1em;font-family:Inter,sans-serif;font-weight:400;">PAIR CODE</div>${code}</div>`;
+    }
+    codeDisplay.style.display = 'flex';
+  } catch(e) {
+    codeDisplay.innerHTML = '<div class="error-msg"><i class="fas fa-exclamation-circle"></i> Erreur. Réessaie.</div>';
+    codeDisplay.style.display = 'flex';
+  } finally {
+    loading.style.display = 'none';
+  }
+});
+
+function copyCode() {
+  const text = document.getElementById('codeDisplay').innerText.replace('PAIR CODE','').trim();
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.getElementById('copy');
+    const orig = btn.innerHTML;
+    btn.innerHTML = '<i class="fas fa-check"></i> Copié !';
+    btn.style.borderColor = '#22c55e';
+    btn.style.color = '#22c55e';
+    setTimeout(() => { btn.innerHTML = orig; btn.style.borderColor=''; btn.style.color=''; }, 2000);
+  }).catch(() => {});
+}
+
+/* ─── AUDIO PLAYER ─── */
+const audio = document.getElementById('bgAudio');
+const playIcon = document.getElementById('playIcon');
+const progressFill = document.getElementById('progressFill');
+const currentTimeEl = document.getElementById('currentTime');
+const totalTimeEl = document.getElementById('totalTime');
+let isMuted = false;
+
+function togglePlay() {
+  if (audio.paused) {
+    audio.play().catch(()=>{});
+    playIcon.className = 'fas fa-pause';
+  } else {
+    audio.pause();
+    playIcon.className = 'fas fa-play';
+  }
+}
+function toggleMute() {
+  isMuted = !isMuted;
+  audio.muted = isMuted;
+  document.getElementById('volBtn').innerHTML = isMuted
+    ? '<i class="fas fa-volume-mute"></i>'
+    : '<i class="fas fa-volume-up"></i>';
+}
+function seekAudio(e) {
+  const bar = document.getElementById('progressBar');
+  const pct = e.offsetX / bar.offsetWidth;
+  audio.currentTime = pct * audio.duration;
+}
+function fmtTime(s) {
+  if (isNaN(s)) return '0:00';
+  const m = Math.floor(s/60), sec = Math.floor(s%60);
+  return `${m}:${sec.toString().padStart(2,'0')}`;
+}
+audio.addEventListener('timeupdate', () => {
+  if (audio.duration) {
+    progressFill.style.width = (audio.currentTime/audio.duration*100)+'%';
+    currentTimeEl.textContent = fmtTime(audio.currentTime);
+  }
+});
+audio.addEventListener('loadedmetadata', () => {
+  totalTimeEl.textContent = fmtTime(audio.duration);
+});
+audio.addEventListener('ended', () => { playIcon.className = 'fas fa-play'; });
+
+/* Auto-play on first interaction */
+document.addEventListener('click', function autoplay() {
+  if (audio.paused) {
+    audio.play().then(() => { playIcon.className = 'fas fa-pause'; }).catch(()=>{});
+  }
+  document.removeEventListener('click', autoplay);
+}, { once: true });
+</script>
+</body>
+</html>

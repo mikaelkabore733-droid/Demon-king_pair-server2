@@ -1,2 +1,14 @@
-# Demon-king_pair-server2
-response.data.code
+###THANKS TO:
+
+-FOR BASE :
+           MR UNIQUE HACKER 
+-FOR DESIGN :
+           ICHIGO NXS VDZ
+-FOR TYPE CODE :
+           SOCKET / NODE JAVASCRIPT
+-FOR APP :
+           MARK ZUCKERBERG
+-FOR LIFE :
+           GOD
+**OPEN SOURCE PROJECT BY THE SLIME TECH EMPIRE**
+###SUPPORTS:
